@@ -1,0 +1,32 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace Dark_side_of_the_light
+{
+    public class Event
+    {
+        public string situation, first_choise_name, second_choise_name, third_choise_name, fourth_choise_name;
+        public string picture;
+        public Event first_path;
+        public Event second_path;
+        public Event third_path;
+        public Event fourth_path;
+        bool dead = false;
+        public bool Dead
+        {
+            set { dead = value; }
+            get { return dead; }
+        }
+    }
+    class Being
+    {
+        int health=100;
+        int power;
+        public Being(int power)
+        {
+            this.power = power;
+        }
+    }
+}
