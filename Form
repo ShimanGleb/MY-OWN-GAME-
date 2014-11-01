@@ -1,0 +1,97 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Windows.Forms;
+
+namespace Dark_side_of_the_light
+{ 
+    public partial class Form1 : Form
+    {
+        Being Me = new Being(10);
+        Event present = new Event();
+        Event A1 = new Event();
+        Event A2 = new Event();
+        Event E1 = new Event();
+        Event w1, w2, w3, w4;
+        
+        public Form1()
+        {
+            InitializeComponent();
+            {
+                A1.situation = "One time, I was walking in the forest, and then came to field. This is my usual way, I walk here whole my life. And now, I found a hole in the ground. Just hole. Nothing exitede there, just black nothingness. ";
+                A1.situation += "I always find them, but I always go past them. Bacause our science denys existance of holes. But this time I took tought: what is it? What will happen if I step there? I was thinking about it, and finally came to decision.";
+                A1.first_choise_name = "I want to know what is behind this darkness.";
+                A1.second_choise_name = "My science firbids existing of holes. I will go past it.";
+                A1.third_choise_name = "What should I do?";
+                A1.fourth_choise_name = "What should I do?";
+                
+                A1.first_path = A2;
+                A1.second_path = E1;
+                A1.third_path = A1; 
+                A1.fourth_path = A1;
+                E1.situation = "I was too scared. I have decided just to go like nothing happened. I`m sure, I will meet this holes later, but they won`t draw my attention any more. But I still have one question: was my choise right?";
+                E1.first_choise_name = "He was dead";
+                E1.second_choise_name = "He didn`t see";
+                E1.third_choise_name = "They hated him";
+                E1.fourth_choise_name = "They intercepted him";
+                E1.Dead = true;
+            }
+            show(A1);
+        }
+        public void show(Event data)
+        {
+            Story.Text = data.situation;
+            button1.Text = data.first_choise_name;
+            button2.Text = data.second_choise_name;
+            button3.Text = data.third_choise_name;
+            button4.Text = data.fourth_choise_name;
+            /*Bitmap image=new Bitmap(data.picture);
+            pictureBox1.Image = (Image)image;*/
+            w1 = data.first_path;
+            w2 = data.second_path;
+            w3 = data.third_path;
+            w4 = data.fourth_path;
+            
+        }
+        private void Story_TextChanged(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            if (present.Dead == true) Environment.Exit(0);
+            present = w1;
+            show(present);
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            if (present.Dead == true) Environment.Exit(0);
+            present = w2;
+            show(present);
+        }
+        private void button3_Click(object sender, EventArgs e)
+        {
+            if (present.Dead == true) Environment.Exit(0);
+            present = w3;
+            show(present);
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            if (present.Dead == true) Environment.Exit(0);
+            present = w4;
+            show(present);
+        }
+
+        private void pictureBox1_Click(object sender, EventArgs e)
+        {
+
+        }
+    }
+}
