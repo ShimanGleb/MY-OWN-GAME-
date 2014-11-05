@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.Xml.Linq;
 
 namespace Dark_side_of_the_light
 { 
@@ -15,30 +16,64 @@ namespace Dark_side_of_the_light
         Event present = new Event();
         Event A1 = new Event();
         Event A2 = new Event();
+        Event A3 = new Event();
         Event E1 = new Event();
+        Event E2 = new Event();
+        Event E3 = new Event();
+        Event E4 = new Event();
+        Event E5 = new Event();
         Event w1, w2, w3, w4;
         
         public Form1()
         {
             InitializeComponent();
             {
-                A1.situation = "One time, I was walking in the forest, and then came to field. This is my usual way, I walk here whole my life. And now, I found a hole in the ground. Just hole. Nothing exitede there, just black nothingness. ";
-                A1.situation += "I always find them, but I always go past them. Bacause our science denys existance of holes. But this time I took tought: what is it? What will happen if I step there? I was thinking about it, and finally came to decision.";
-                A1.first_choise_name = "I want to know what is behind this darkness.";
-                A1.second_choise_name = "My science firbids existing of holes. I will go past it.";
-                A1.third_choise_name = "What should I do?";
-                A1.fourth_choise_name = "What should I do?";
-                
+                string path_to_data = @"f:\Загрузки\Dark side of the light\Dark side of the light\data.xml";
+                XDocument data_reader = XDocument.Load(path_to_data);
+
+                A1.situation = data_reader.Element("Events").Element("A1").Element("Text").Value;
+                A1.first_choise_name = data_reader.Element("Events").Element("A1").Element("First_button").Value;
+                A1.second_choise_name = data_reader.Element("Events").Element("A1").Element("Second_button").Value;
+                A1.third_choise_name = "";
+                A1.fourth_choise_name = "";
                 A1.first_path = A2;
                 A1.second_path = E1;
                 A1.third_path = A1; 
                 A1.fourth_path = A1;
-                E1.situation = "I was too scared. I have decided just to go like nothing happened. I`m sure, I will meet this holes later, but they won`t draw my attention any more. But I still have one question: was my choise right?";
-                E1.first_choise_name = "He was dead";
-                E1.second_choise_name = "He didn`t see";
-                E1.third_choise_name = "They hated him";
-                E1.fourth_choise_name = "They intercepted him";
+
+                E1.situation = data_reader.Element("Events").Element("E1").Element("Text").Value;
+                E1.first_choise_name = data_reader.Element("Events").Element("E1").Element("First_button").Value;
+                E1.second_choise_name = data_reader.Element("Events").Element("E1").Element("Second_button").Value;
+                E1.third_choise_name = data_reader.Element("Events").Element("E1").Element("Third_button").Value;
+                E1.fourth_choise_name = data_reader.Element("Events").Element("E1").Element("Fourth_button").Value;
                 E1.Dead = true;
+
+                A2.situation = data_reader.Element("Events").Element("A2").Element("Text").Value;
+                A2.first_choise_name = data_reader.Element("Events").Element("A2").Element("First_button").Value;
+                A2.second_choise_name = data_reader.Element("Events").Element("A2").Element("Second_button").Value;
+                A2.third_choise_name = data_reader.Element("Events").Element("A2").Element("Third_button").Value;
+                A2.fourth_choise_name = data_reader.Element("Events").Element("A2").Element("Fourth_button").Value;
+                A2.third_path = A3;
+
+                A3.situation = data_reader.Element("Events").Element("A3").Element("Text").Value;
+                A3.first_choise_name = data_reader.Element("Events").Element("A3").Element("First_button").Value;
+                A3.second_choise_name = data_reader.Element("Events").Element("A3").Element("Second_button").Value;
+                A3.third_choise_name = data_reader.Element("Events").Element("A3").Element("Third_button").Value;
+                A3.fourth_choise_name = data_reader.Element("Events").Element("A3").Element("Fourth_button").Value;
+                A3.first_path = E2;
+                A3.second_path = E2;
+                A3.third_path = E2;
+                A3.fourth_path = E2;
+
+                E2.situation = data_reader.Element("Events").Element("E2").Element("Text").Value;
+                E2.first_choise_name = data_reader.Element("Events").Element("E2").Element("First_button").Value;
+                E2.second_choise_name = data_reader.Element("Events").Element("E2").Element("Second_button").Value;
+                E2.third_choise_name = data_reader.Element("Events").Element("E2").Element("Third_button").Value;
+                E2.fourth_choise_name = data_reader.Element("Events").Element("E2").Element("Fourth_button").Value;
+                E2.first_path = E3;
+                E2.second_path = E4;
+                E2.third_path = E5;
+                E2.fourth_path = E2;
             }
             show(A1);
         }
