@@ -6,125 +6,122 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using System.Xml.Linq;
+using System.Xml;
 
-namespace Dark_side_of_the_light
-{ 
+namespace Dark_side_of_the_light__V2_
+{
     public partial class Form1 : Form
     {
-        Being Me = new Being(10);
-        Event present = new Event();
-        Event A1 = new Event();
-        Event A2 = new Event();
-        Event A3 = new Event();
-        Event E1 = new Event();
-        Event E2 = new Event();
-        Event E3 = new Event();
-        Event E4 = new Event();
-        Event E5 = new Event();
-        Event w1, w2, w3, w4;
         
+        SortedList<string, Event> story = new SortedList<string, Event>();
+        string CurrentEventName="A1";
         public Form1()
         {
             InitializeComponent();
+            string path = @"f:\Загрузки\Dark side of the light (V2)\Dark side of the light (V2)\data.xml";
+            XmlDocument file = new XmlDocument();
+            using (XmlReader reader = XmlReader.Create(path))
             {
-                string path_to_data = @"f:\Загрузки\Dark side of the light\Dark side of the light\data.xml";
-                XDocument data_reader = XDocument.Load(path_to_data);
+                Event NewEvent = new Event();
+                while (reader.Read())
+                {
+                    
+                    switch (reader.NodeType)
+                    {
+                        case XmlNodeType.Element:
+                            if (reader.Name == "Event")
+                            {
+                                for (int i = 0; i < reader.AttributeCount; i++)
+                                {
+                                    NewEvent.Name += reader[i];
+                                }
+                            }
 
-                A1.situation = data_reader.Element("Events").Element("A1").Element("Text").Value;
-                A1.first_choise_name = data_reader.Element("Events").Element("A1").Element("First_button").Value;
-                A1.second_choise_name = data_reader.Element("Events").Element("A1").Element("Second_button").Value;
-                A1.third_choise_name = "";
-                A1.fourth_choise_name = "";
-                A1.first_path = A2;
-                A1.second_path = E1;
-                A1.third_path = A1; 
-                A1.fourth_path = A1;
-
-                E1.situation = data_reader.Element("Events").Element("E1").Element("Text").Value;
-                E1.first_choise_name = data_reader.Element("Events").Element("E1").Element("First_button").Value;
-                E1.second_choise_name = data_reader.Element("Events").Element("E1").Element("Second_button").Value;
-                E1.third_choise_name = data_reader.Element("Events").Element("E1").Element("Third_button").Value;
-                E1.fourth_choise_name = data_reader.Element("Events").Element("E1").Element("Fourth_button").Value;
-                E1.Dead = true;
-
-                A2.situation = data_reader.Element("Events").Element("A2").Element("Text").Value;
-                A2.first_choise_name = data_reader.Element("Events").Element("A2").Element("First_button").Value;
-                A2.second_choise_name = data_reader.Element("Events").Element("A2").Element("Second_button").Value;
-                A2.third_choise_name = data_reader.Element("Events").Element("A2").Element("Third_button").Value;
-                A2.fourth_choise_name = data_reader.Element("Events").Element("A2").Element("Fourth_button").Value;
-                A2.third_path = A3;
-
-                A3.situation = data_reader.Element("Events").Element("A3").Element("Text").Value;
-                A3.first_choise_name = data_reader.Element("Events").Element("A3").Element("First_button").Value;
-                A3.second_choise_name = data_reader.Element("Events").Element("A3").Element("Second_button").Value;
-                A3.third_choise_name = data_reader.Element("Events").Element("A3").Element("Third_button").Value;
-                A3.fourth_choise_name = data_reader.Element("Events").Element("A3").Element("Fourth_button").Value;
-                A3.first_path = E2;
-                A3.second_path = E2;
-                A3.third_path = E2;
-                A3.fourth_path = E2;
-
-                E2.situation = data_reader.Element("Events").Element("E2").Element("Text").Value;
-                E2.first_choise_name = data_reader.Element("Events").Element("E2").Element("First_button").Value;
-                E2.second_choise_name = data_reader.Element("Events").Element("E2").Element("Second_button").Value;
-                E2.third_choise_name = data_reader.Element("Events").Element("E2").Element("Third_button").Value;
-                E2.fourth_choise_name = data_reader.Element("Events").Element("E2").Element("Fourth_button").Value;
-                E2.first_path = E3;
-                E2.second_path = E4;
-                E2.third_path = E5;
-                E2.fourth_path = E2;
+                            if (reader.Name == "Text")
+                            {
+                                NewEvent.situation = reader.ReadString();
+                            }
+                            if (reader.Name == "First_button")
+                            {
+                                for (int i = 0; i < reader.AttributeCount; i++)
+                                {
+                                    NewEvent.FirstEvent += reader[i];
+                                }
+                                NewEvent.FirstChoise = reader.ReadString();
+                            }
+                            if (reader.Name == "Second_button")
+                            {
+                                for (int i = 0; i < reader.AttributeCount; i++)
+                                {
+                                    NewEvent.SecondEvent += reader[i];
+                                }
+                                NewEvent.SecondChoise = reader.ReadString();
+                            }
+                            if (reader.Name == "Third_button")
+                            {
+                                for (int i = 0; i < reader.AttributeCount; i++)
+                                {
+                                    NewEvent.ThirdEvent += reader[i];
+                                }
+                                NewEvent.ThirdChoise = reader.ReadString();
+                            }
+                            if (reader.Name == "Fourth_button")
+                            {
+                                for (int i = 0; i < reader.AttributeCount; i++)
+                                {
+                                    NewEvent.FourthEvent += reader[i];
+                                }
+                                NewEvent.FourthChoise = reader.ReadString();
+                                story.Add(NewEvent.Name, NewEvent);
+                                NewEvent = new Event();
+                            }
+                            break;
+                    }
+                }
             }
-            show(A1);
+            show(story[CurrentEventName]);
         }
         public void show(Event data)
         {
-            Story.Text = data.situation;
-            button1.Text = data.first_choise_name;
-            button2.Text = data.second_choise_name;
-            button3.Text = data.third_choise_name;
-            button4.Text = data.fourth_choise_name;
+            richTextBox1.Text = data.situation;
+            button1.Text = data.FirstChoise;
+            button2.Text = data.SecondChoise;
+            button3.Text = data.ThirdChoise;
+            button4.Text = data.FourthChoise;
             /*Bitmap image=new Bitmap(data.picture);
             pictureBox1.Image = (Image)image;*/
-            w1 = data.first_path;
-            w2 = data.second_path;
-            w3 = data.third_path;
-            w4 = data.fourth_path;
-            
-        }
-        private void Story_TextChanged(object sender, EventArgs e)
-        {
-            
+
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if (present.Dead == true) Environment.Exit(0);
-            present = w1;
-            show(present);
+            if (story[CurrentEventName].FirstEvent == "Death") Environment.Exit(0);
+            CurrentEventName = story[CurrentEventName].FirstEvent;
+            show(story[CurrentEventName]);
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            if (present.Dead == true) Environment.Exit(0);
-            present = w2;
-            show(present);
+            if (story[CurrentEventName].FirstEvent == "Death") Environment.Exit(0);
+            CurrentEventName = story[CurrentEventName].SecondEvent;
+            show(story[CurrentEventName]);
         }
+
         private void button3_Click(object sender, EventArgs e)
         {
-            if (present.Dead == true) Environment.Exit(0);
-            present = w3;
-            show(present);
+            if (story[CurrentEventName].FirstEvent == "Death") Environment.Exit(0);
+            CurrentEventName = story[CurrentEventName].ThirdEvent;
+            show(story[CurrentEventName]);
         }
 
         private void button4_Click(object sender, EventArgs e)
         {
-            if (present.Dead == true) Environment.Exit(0);
-            present = w4;
-            show(present);
+            if (story[CurrentEventName].FirstEvent == "Death") Environment.Exit(0);
+            CurrentEventName = story[CurrentEventName].FourthEvent;
+            show(story[CurrentEventName]);
         }
 
-        private void pictureBox1_Click(object sender, EventArgs e)
+        private void richTextBox1_TextChanged(object sender, EventArgs e)
         {
 
         }
