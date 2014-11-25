@@ -1,0 +1,18 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace Dark_side_of_the_light__V2_
+{
+    public class Being
+    {
+        public int health=100;
+        int power=10;
+        public int Power
+        {
+            set { power = value; }
+            get { return power; }
+        }
+    }
+}
