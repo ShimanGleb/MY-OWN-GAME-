@@ -1,0 +1,14 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace Dark_side_of_the_light__V2_
+{
+    public class Encounter: Being
+    {
+        public string Name;
+        public string meeting;
+        public string LinkedEventName;
+    }
+}
