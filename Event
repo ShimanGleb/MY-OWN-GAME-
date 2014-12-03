@@ -17,6 +17,6 @@ namespace Dark_side_of_the_light__V2_
         public string SecondEvent;
         public string ThirdEvent;
         public string FourthEvent;
+        public int EncounterProbability=0;
     }
 }
-
