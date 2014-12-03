@@ -14,9 +14,11 @@ namespace Dark_side_of_the_light__V2_
     {
         Being you = new Being();
         SortedList<string, Event> story = new SortedList<string, Event>();
-        SortedList<string, Encounter> encounters = new SortedList<string, Encounter>();
+        SortedList<string, Encounter> bosses = new SortedList<string, Encounter>();
+        List<Encounter> encounters = new List<Encounter>();
         Boolean IsActoion = false;
         string CurrentEventName="Main menu";
+        Encounter LastEnemy = new Encounter();
         public Form1()
         {
             InitializeComponent();
@@ -44,33 +46,34 @@ namespace Dark_side_of_the_light__V2_
             button1.Text="I will eat your soul itself!";
             button2.Text = "I will eat your heart!";
             button3.Text = "I won`t give up!";
-            button4.Text = "I can do nothing to me!";
+            button4.Text = "You can do nothing to me!";
             try
             {
-                Bitmap image = new Bitmap(Application.StartupPath + @"\Images\" + encounters[CurrentEventName].Name + ".png");
+                Bitmap image = new Bitmap(Application.StartupPath + @"\Images\" + fight.Name + ".png");
                 pictureBox1.Image = (Image)image;
             }
             catch { }
         }
-        public void Battle(int DamageMultiplier, int DefenseMultiplier)
+        public void Battle(Encounter enemy, int DamageMultiplier, int DefenseMultiplier)
         {
             Random ChooseAction = new Random();
             int action = ChooseAction.Next(0, 2);
             if (action == 0)
             {
-                you.health -= encounters[CurrentEventName].Power / DefenseMultiplier;
+                Random AdditionalDamage= new Random();
+                you.health -= (enemy.Power + AdditionalDamage.Next(0, 10)) / DefenseMultiplier;
                 richTextBox1.Text = "They hate you. They want to eat you. Will you give up? \r\nNo! I will kill them all, I will rip their hearts out and eat them!";
-                encounters[CurrentEventName].health -= you.Power * DamageMultiplier;
+                enemy.health -= you.Power * DamageMultiplier;
             }
             if (action == 1)
             {
                 richTextBox1.Text = "We will wait. You can`t run away, and now we will satisfy our pride! \r\nDon`t underestimate me! My will to kill you will destroy your selfconfidence!";
-                encounters[CurrentEventName].health -= you.Power * DamageMultiplier;
+                enemy.health -= you.Power * DamageMultiplier;
             }
             if (action == 2)
             {
                 richTextBox1.Text = "Little being, how dare you fight with us? We won`t admit you! \r\nI don`t need your admitting! You are liars, wishing my death. You can do nothing to me, but I won`t show you any mercy!";
-                encounters[CurrentEventName].health -= you.Power * DamageMultiplier/2;
+                enemy.health -= you.Power * DamageMultiplier / 2;
             }
             label2.Text = you.health.ToString();
             label4.Text = you.Power.ToString();
@@ -80,7 +83,7 @@ namespace Dark_side_of_the_light__V2_
                 CurrentEventName = "Death in battle";
                 show(story[CurrentEventName]);
             }
-            if (CurrentEventName != "Death in battle" && encounters[CurrentEventName].health <= 0)
+            if (CurrentEventName != "Death in battle" && enemy.health <= 0)
             {
                 IsActoion = false;
                 if (you.health <= 90) you.health += 10;
@@ -88,9 +91,29 @@ namespace Dark_side_of_the_light__V2_
                 you.Power += 10;
                 label2.Text = you.health.ToString();
                 label4.Text = you.Power.ToString();
-                CurrentEventName = encounters[CurrentEventName].LinkedEventName;
+                CurrentEventName = enemy.LinkedEventName;
                 show(story[CurrentEventName]);
             }
+        }
+        public void InitializeEvent()
+        {
+            if (IfAction(CurrentEventName)) StartBattle(bosses[CurrentEventName]);
+            else
+            {
+                show(story[CurrentEventName]);
+                for (int i = 0; i < story[CurrentEventName].EncounterProbability; i++)
+                {
+                    Random EncounterChance = new Random();
+                    if (EncounterChance.Next(0, 100) > 50)
+                    {
+                        int ChosenEnemy = EncounterChance.Next(0, encounters.Count);
+                        encounters[ChosenEnemy].LinkedEventName = CurrentEventName;
+                        LastEnemy = encounters[ChosenEnemy];
+                        StartBattle(LastEnemy);
+                        break;
+                    }
+                }
+            } 
         }
         private void button1_Click(object sender, EventArgs e)
         {
@@ -98,12 +121,11 @@ namespace Dark_side_of_the_light__V2_
             {
                 if (story[CurrentEventName].FirstEvent == "Death") Environment.Exit(0);
                 CurrentEventName = story[CurrentEventName].FirstEvent;
-                if (IfAction(CurrentEventName)) StartBattle(encounters[CurrentEventName]);
-                else show(story[CurrentEventName]);
+                InitializeEvent();
             }
             else
             {
-                Battle(2, 1);
+                Battle(LastEnemy,2, 1);
             }
         }
 
@@ -113,12 +135,11 @@ namespace Dark_side_of_the_light__V2_
             {
                 if (story[CurrentEventName].SecondEvent == "Death") Environment.Exit(0);
                 CurrentEventName = story[CurrentEventName].SecondEvent;
-                if (IfAction(CurrentEventName)) StartBattle(encounters[CurrentEventName]);
-                else show(story[CurrentEventName]);
+                InitializeEvent();
             }
             else
             {
-                Battle(1, 1);
+                Battle(LastEnemy,1, 1);
             }
         }
 
@@ -128,12 +149,11 @@ namespace Dark_side_of_the_light__V2_
             {
                 if (story[CurrentEventName].ThirdEvent == "Death") Environment.Exit(0);
                 CurrentEventName = story[CurrentEventName].ThirdEvent;
-                if (IfAction(CurrentEventName)) StartBattle(encounters[CurrentEventName]);
-                else show(story[CurrentEventName]);
+                InitializeEvent();
             }
             else
             {
-                Battle(0, 2);
+                Battle(LastEnemy,0, 2);
             }
         }
 
@@ -143,12 +163,11 @@ namespace Dark_side_of_the_light__V2_
             {
                 if (story[CurrentEventName].FourthEvent == "Death") Environment.Exit(0);
                 CurrentEventName = story[CurrentEventName].FourthEvent;
-                if (IfAction(CurrentEventName)) StartBattle(encounters[CurrentEventName]);
-                else show(story[CurrentEventName]);
+                InitializeEvent();
             }
             else
             {
-                Battle(0, 4);
+                Battle(LastEnemy,0, 4);
             }
         }
 
@@ -160,7 +179,6 @@ namespace Dark_side_of_the_light__V2_
         private void Form1_Load(object sender, EventArgs e)
         {
             string path = Application.StartupPath + @"\data.xml";
-            XmlDocument file = new XmlDocument();
             try
             {
                 using (XmlReader reader = XmlReader.Create(path))
@@ -176,6 +194,11 @@ namespace Dark_side_of_the_light__V2_
                                 if (reader.Name == "Event")
                                 {
                                     NewEvent.Name += reader[0];
+                                    try
+                                    {
+                                        NewEvent.EncounterProbability += Convert.ToInt32(reader[1]);
+                                    }
+                                    catch { }
                                 }
                                 if (reader.Name == "Text")
                                 {
@@ -203,17 +226,30 @@ namespace Dark_side_of_the_light__V2_
                                     story.Add(NewEvent.Name, NewEvent);
                                     NewEvent = new Event();
                                 }
-                                if (reader.Name == "Encounter")
+                                if (reader.Name == "Boss")
                                 {
                                     NewEncounter.Name += reader[0];
                                     NewEncounter.LinkedEventName += reader[1];
+                                    for (int i = 0; i < 2; i++) { reader.Read(); }
+                                    NewEncounter.meeting = reader.ReadString();
+                                    for (int i = 0; i < 2; i++) { reader.Read(); }
+                                    NewEncounter.health = Convert.ToInt32(reader.ReadString());
+                                    for (int i = 0; i < 2; i++) { reader.Read(); }
+                                    NewEncounter.Power = Convert.ToInt32(reader.ReadString());
+                                    reader.Read();
+                                    bosses.Add(NewEncounter.Name, NewEncounter);
+                                    NewEncounter = new Encounter();
+                                }
+                                if (reader.Name == "Encounter")
+                                {
+                                    NewEncounter.Name += reader[0];
                                 }
                                 if (reader.Name == "Meeting") NewEncounter.meeting = reader.ReadString();
                                 if (reader.Name == "Health") NewEncounter.health = Convert.ToInt32(reader.ReadString());
                                 if (reader.Name == "Power")
                                 {
                                     NewEncounter.Power = Convert.ToInt32(reader.ReadString());
-                                    encounters.Add(NewEncounter.Name, NewEncounter);
+                                    encounters.Add(NewEncounter);
                                     NewEncounter = new Encounter();
                                 }
                                 break;
@@ -236,7 +272,11 @@ namespace Dark_side_of_the_light__V2_
         }
         public bool IfAction(string CurrentEventName)
         {
-            if ((CurrentEventName[1] < '0' || CurrentEventName[1] > '9') && CurrentEventName != "Main menu" && CurrentEventName != "Reason" && CurrentEventName != "Credits") return true;
+            if ((CurrentEventName[1] < '0' || CurrentEventName[1] > '9') && CurrentEventName != "Main menu" && CurrentEventName != "Reason" && CurrentEventName != "Credits") 
+            {
+                LastEnemy = bosses[CurrentEventName];
+                return true;
+            }
             else return false;
         }
     }
