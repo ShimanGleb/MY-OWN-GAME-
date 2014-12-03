@@ -10,7 +10,7 @@ using System.Xml;
 
 namespace Dark_side_of_the_light__V2_
 {
-    public partial class Form1 : Form
+    public partial class MainWindow : Form
     {
         Being you = new Being();
         SortedList<string, Event> story = new SortedList<string, Event>();
@@ -19,14 +19,14 @@ namespace Dark_side_of_the_light__V2_
         Boolean IsActoion = false;
         string CurrentEventName="Main menu";
         Encounter LastEnemy = new Encounter();
-        public Form1()
+        public MainWindow()
         {
             InitializeComponent();
         }
         public void show(Event data)
         {
             if (data.Name == "A17" && you.health < 50) data = story["S1"];
-            richTextBox1.Text = data.situation;
+            StoryText.Text = data.situation;
             button1.Text = data.FirstChoise;
             button2.Text = data.SecondChoise;
             button3.Text = data.ThirdChoise;
@@ -34,7 +34,7 @@ namespace Dark_side_of_the_light__V2_
             try
             {
                 Bitmap image = new Bitmap(Application.StartupPath + @"\Images\" + data.Name + ".png");
-                pictureBox1.Image = (Image)image;
+                StoryPicture.Image = (Image)image;
             }
             catch { }
 
@@ -42,7 +42,7 @@ namespace Dark_side_of_the_light__V2_
         public void StartBattle(Encounter fight)
         {
             IsActoion = true;
-            richTextBox1.Text = fight.meeting;
+            StoryText.Text = fight.meeting;
             button1.Text="I will eat your soul itself!";
             button2.Text = "I will eat your heart!";
             button3.Text = "I won`t give up!";
@@ -50,7 +50,7 @@ namespace Dark_side_of_the_light__V2_
             try
             {
                 Bitmap image = new Bitmap(Application.StartupPath + @"\Images\" + fight.Name + ".png");
-                pictureBox1.Image = (Image)image;
+                StoryPicture.Image = (Image)image;
             }
             catch { }
         }
@@ -62,17 +62,17 @@ namespace Dark_side_of_the_light__V2_
             {
                 Random AdditionalDamage= new Random();
                 you.health -= (enemy.Power + AdditionalDamage.Next(0, 10)) / DefenseMultiplier;
-                richTextBox1.Text = "They hate you. They want to eat you. Will you give up? \r\nNo! I will kill them all, I will rip their hearts out and eat them!";
+                StoryText.Text = "They hate you. They want to eat you. Will you give up? \r\nNo! I will kill them all, I will rip their hearts out and eat them!";
                 enemy.health -= you.Power * DamageMultiplier;
             }
             if (action == 1)
             {
-                richTextBox1.Text = "We will wait. You can`t run away, and now we will satisfy our pride! \r\nDon`t underestimate me! My will to kill you will destroy your selfconfidence!";
+                StoryText.Text = "We will wait. You can`t run away, and now we will satisfy our pride! \r\nDon`t underestimate me! My will to kill you will destroy your selfconfidence!";
                 enemy.health -= you.Power * DamageMultiplier;
             }
             if (action == 2)
             {
-                richTextBox1.Text = "Little being, how dare you fight with us? We won`t admit you! \r\nI don`t need your admitting! You are liars, wishing my death. You can do nothing to me, but I won`t show you any mercy!";
+                StoryText.Text = "Little being, how dare you fight with us? We won`t admit you! \r\nI don`t need your admitting! You are liars, wishing my death. You can do nothing to me, but I won`t show you any mercy!";
                 enemy.health -= you.Power * DamageMultiplier / 2;
             }
             label2.Text = you.health.ToString();
