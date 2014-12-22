@@ -27,10 +27,10 @@ namespace Dark_side_of_the_light__V2_
         {
             if (data.Name == "A17" && you.health < 50) data = story["S1"];
             StoryText.Text = data.situation;
-            button1.Text = data.FirstChoise;
-            button2.Text = data.SecondChoise;
-            button3.Text = data.ThirdChoise;
-            button4.Text = data.FourthChoise;
+            FirstChoiseButton.Text = data.FirstChoise;
+            SecondChoiseButton.Text = data.SecondChoise;
+            ThirdChoiseButton.Text = data.ThirdChoise;
+            FourthChoiseButton.Text = data.FourthChoise;
             try
             {
                 Bitmap image = new Bitmap(Application.StartupPath + @"\Images\" + data.Name + ".png");
@@ -43,10 +43,10 @@ namespace Dark_side_of_the_light__V2_
         {
             IsActoion = true;
             StoryText.Text = fight.meeting;
-            button1.Text="I will eat your soul itself!";
-            button2.Text = "I will eat your heart!";
-            button3.Text = "I won`t give up!";
-            button4.Text = "You can do nothing to me!";
+            FirstChoiseButton.Text="I will eat your soul itself!";
+            SecondChoiseButton.Text = "I will eat your heart!";
+            ThirdChoiseButton.Text = "I won`t give up!";
+            FourthChoiseButton.Text = "You can do nothing to me!";
             try
             {
                 Bitmap image = new Bitmap(Application.StartupPath + @"\Images\" + fight.Name + ".png");
@@ -75,8 +75,8 @@ namespace Dark_side_of_the_light__V2_
                 StoryText.Text = "Little being, how dare you fight with us? We won`t admit you! \r\nI don`t need your admitting! You are liars, wishing my death. You can do nothing to me, but I won`t show you any mercy!";
                 enemy.health -= you.Power * DamageMultiplier / 2;
             }
-            label2.Text = you.health.ToString();
-            label4.Text = you.Power.ToString();
+            Health.Text = you.health.ToString();
+            Power.Text = you.Power.ToString();
             if (you.health <= 0)
             {
                 IsActoion = false;
@@ -89,8 +89,8 @@ namespace Dark_side_of_the_light__V2_
                 if (you.health <= 90) you.health += 10;
                 else you.health = 100;
                 you.Power += 10;
-                label2.Text = you.health.ToString();
-                label4.Text = you.Power.ToString();
+                Health.Text = you.health.ToString();
+                Power.Text = you.Power.ToString();
                 CurrentEventName = enemy.LinkedEventName;
                 show(story[CurrentEventName]);
             }
@@ -115,7 +115,7 @@ namespace Dark_side_of_the_light__V2_
                 }
             } 
         }
-        private void button1_Click(object sender, EventArgs e)
+        private void FirstChoiseButton_Click(object sender, EventArgs e)
         {
             if (IsActoion == false)
             {
@@ -129,7 +129,7 @@ namespace Dark_side_of_the_light__V2_
             }
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void SecondChoiseButton_Click(object sender, EventArgs e)
         {
             if (IsActoion == false)
             {
@@ -143,7 +143,7 @@ namespace Dark_side_of_the_light__V2_
             }
         }
 
-        private void button3_Click(object sender, EventArgs e)
+        private void ThirdChoiseButton_Click(object sender, EventArgs e)
         {
             if (IsActoion == false)
             {
@@ -157,7 +157,7 @@ namespace Dark_side_of_the_light__V2_
             }
         }
 
-        private void button4_Click(object sender, EventArgs e)
+        private void FourthChoiseButton_Click(object sender, EventArgs e)
         {
             if (IsActoion == false)
             {
@@ -171,12 +171,12 @@ namespace Dark_side_of_the_light__V2_
             }
         }
 
-        private void richTextBox1_TextChanged(object sender, EventArgs e)
+        private void StoryText_TextChanged(object sender, EventArgs e)
         {
 
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+        private void MainWindow_Load(object sender, EventArgs e)
         {
             string path = Application.StartupPath + @"\data.xml";
             try
@@ -260,7 +260,7 @@ namespace Dark_side_of_the_light__V2_
             catch 
             {
                 Event Exception = new Event();
-                Exception.situation="Error: data file not found. Try to unzip file.";
+                Exception.situation="Error: data file is not found or corrupted. Try to unzip file.";
                 Exception.FirstEvent="Death";
                 Exception.SecondEvent = "Death";
                 Exception.ThirdEvent = "Death";
